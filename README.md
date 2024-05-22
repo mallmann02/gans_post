@@ -26,7 +26,7 @@ In a intuitive (super) high-level, generative models are a class of models that 
 
 Source: [Google Developers](https://developers.google.com/machine-learning/gan/generative)
 
-The generative models are used to model the joint distribution of the input data and the labels, $P(X, Y)$ while the discriminative models are used to model the conditional distribution of the labels given the input data, $P(Y|X)$.
+The generative models are used to model the joint distribution of the input data and the labels, $P(X, Y)$ while the discriminative models are used to model the conditional distribution of the labels given the input data, $P(Y given X)$.
 
 Ok, but let's have more intuition about it. For this let's review the concept of <u>conditional probability</u> and <u>joint probability</u>. The joint probability is the probability of two events happening at the same time, while the conditional probability is the probability of one event happening given that another event has already happened.
 
@@ -36,7 +36,7 @@ $$ P(X, Y) = P(X) \cdot P(Y|X) $$
 
 $$ P(Y|X) = \frac{P(X, Y)}{P(X)} $$
 
-Bringing to the example of digits recognition, the discriminative model, in the training step, has access to the input data $X$ that are the pixels $x_1, x_2, ..., x_n$ of the image and the labels $Y$ that are the digits $0, 1, ..., 9$. So, thinking in a simple classification network, it works by <u>maximizing the likelihood</u> of the labels given the input data, $P(Y|X)$, and it does this by receiving a feedback in the form of "it's right" or "it's wrong" and adjusting the weights in favor of maximizing the likelihood for the specific class $Y$.
+Bringing to the example of digits recognition, the discriminative model, in the training step, has access to the input data $X$ that are the pixels $x_1, x_2, ..., x_n$ of the image and the labels $Y$ that are the digits $0, 1, ..., 9$. So, thinking in a simple classification network, it works by <u>maximizing the likelihood</u> of the labels given the input data, $P(YgivenX)$, and it does this by receiving a feedback in the form of "it's right" or "it's wrong" and adjusting the weights in favor of maximizing the likelihood for the specific class $Y$.
 
 In the other hand, the generative model, is all blindfolded and has no idea of the labels nor the input data. Instead, it receives a random input data in the form of a noise vector $z$ and gradually learns to transform it in the "real" input data distribution by maximizing the joint probability: $P(x_1), P(x_2), ..., P(x_n)$, that is, the probability of the pixels of the image occuring together in a certain way. And it does this by receiving a feedback that is the <u>distance</u> of its "transformation" of the data from a real data sample.
 
@@ -160,5 +160,5 @@ Unstable training is a common problem in GAN's training process. It occurs when 
 - `Article` [Understanding Generative Adversarial Networks](https://danieltakeshi.github.io/2017/03/05/understanding-generative-adversarial-networks/)
 - `Article` [Joint Probability Distribution](https://en.wikipedia.org/wiki/Joint_probability_distribution)
 - `Article` [Conditional Probability Distribution](https://en.wikipedia.org/wiki/Conditional_probability_distribution)
-- `Video` [Basic probability: Joint, marginal and conditional probability | Independence](https://www.youtube.com/watch?v=SrEmzdOT65s)
+- `Video` [Basic probability: Joint, marginal and conditional probability Independence](https://www.youtube.com/watch?v=SrEmzdOT65s)
 - `Paper` [Improved Techniques for Training GANs](https://arxiv.org/pdf/1606.03498)
