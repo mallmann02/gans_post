@@ -58,7 +58,9 @@ To visualize it in the example of the distribution, take a look at the GIF below
   <source src="./images/convergence_ex.mov" type="video/mp4">
 </video>
 
-In the GIF above, we have a simple example of two Normal Distributions. The blue one is our generated distribution that gradually converges to the real data distribution as it changes it's parameters of mean and variance.
+In the GIF above, we have a simple example on two Normal Distributions. The blue one is our generated distribution that gradually converges to the real data distribution as it changes it's parameters of mean and variance.
+
+For a more precise example of visualizing the training process of a GAN, take a look at this [GAN Lab](https://poloclub.github.io/ganlab/). There you can draw your own data distribution and see the generator trying to approximate it while the discriminator learns the function that separates the real data from the generated data.
 
 ## Architecture visualization and the training process
 
@@ -111,6 +113,105 @@ Where:
 - $G(z)$ is the output of the generator for the random noise vector $z$
 - $D(G(z))$ is the output of the discriminator for the fake sample $G(z)$
 - $p_{z}(z)$ is the distribution of the random noise vectors
+
+## Training Steps
+
+So, now we have a little intuition about the architecture and how our components conects with each other through the loss functions. Let's talk about the training steps of the GAN's.
+
+1. sample a batch of random noise vectors from a given distribution.
+
+2. sample a batch of real samples from the dataset.
+
+3. feed the random noise vectors into the generator to generate a batch of fake samples.
+
+4. feed the real samples and the fake samples into the discriminator to get the discriminator loss.
+
+5. update the discriminator weights based on the gradients given by the discriminator loss.
+
+6. sample a new batch of random noise vectors from the distribution.
+
+7. feed the random noise vectors into the generator to generate a new batch of fake samples.
+
+8. feed the fake samples into the discriminator to get the generator loss.
+
+9. update the generator weights using the gradients of the generator loss.
+
+## Code analysis
+
+Following the above training steps let's look up to a code of a [DC-GAN using PyTorch](https://neptune.ai/blog/gan-failure-modes) to generate images of the MNIST dataset. We'll analyze the code in detail to understand where each step fits and highlight some tricks that are used to stabilize the training process.
+
+### Training loop
+
+Let's take a look at the main training loop just to have a sense of the steps before entering inside the architectures:
+
+```python
+# Iterating over the epochs
+for epoch in range(epochs):
+  loss_g = 0.0
+  loss_d_real = 0.0
+  loss_d_fake = 0.0
+
+  # Iterating over the real data batches
+  for bi, data in tqdm(enumerate(train_loader), total=int(len(train_data) / train_loader.batch_size)):
+    # Getting the real data from the batch (Step 2)
+    image, _ = data
+
+    # Moving the data to the device (Pytorch)
+    image = image.to(device)
+
+    # Getting the batch size
+    b_size = len(image)
+
+    # [Trick] Training the discriminator for consecutive steps
+    for step in range(k):
+      # Creating the noise vector (Step 1)
+      # Getting the fake data from the generator (Step 3)
+      data_fake = generator(create_noise(b_size, latent_dim)).detach()
+
+      data_real = image
+
+      # Training the discriminator (Step 4 and 5)
+      loss_d_fake_real = train_discriminator(optim_d, data_real, data_fake)
+    
+    # Creating aonther noise vector (Step 6)
+    # Getting the fake data from the generator (Step 7)
+    data_fake = generator(create_noise(b_size, latent_dim))
+
+    # Training the generator (Step 8 and 9)
+    loss_g += train_generator(optim_g, data_fake)
+```
+
+### [Looking inside] `train_generator` function
+
+```python
+def train_generator(optimizer, data_fake):
+  b_size = data_fake.size(0)
+  real_label = label_real(b_size)
+  optimizer.zero_grad()
+  output = discriminator(data_fake)
+  loss = criterion(output, real_label)
+  loss.backward()
+  optimizer.step()
+  return loss
+```
+
+### [Looking inside] `train_discriminator` function
+
+```python
+def train_discriminator(optimizer, data_real, data_fake):
+  b_size = data_real.size(0)
+  real_label = label_real(b_size)
+  fake_label = label_fake(b_size)
+  optimizer.zero_grad()
+  output_real = discriminator(data_real)
+  loss_real = criterion(output_real, real_label)
+  output_fake = discriminator(data_fake)
+  loss_fake = criterion(output_fake, fake_label)
+  loss_real.backward()
+  loss_fake.backward()
+  optimizer.step()
+  return loss_real, loss_fake
+```
 
 ## Training problems
 
