@@ -88,7 +88,7 @@ The discriminator loss is a measure of how well the discriminator is able to dis
 
 The loss is defined in the following formula:
 
-$$ L_D = -\mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] - \mathbb{E}_{z \sim p_{z}(z)}[\log(1 - D(G(z)))] $$
+$$ L_D = -{E}_{x \sim p_{data}(x)}[\log D(x)] - {E}_{z \sim p_{z}(z)}[\log(1 - D(G(z)))] $$
 
 Where:
 - $L_D$ is the discriminator loss
@@ -105,7 +105,7 @@ The generator loss is a measure of how well the generator is able to generate sa
 
 The generator loss is calculated using the following formula:
 
-$$ L_G = -\mathbb{E}_{z \sim p_{z}(z)}[\log D(G(z))] $$
+$$ L_G = -{E}_{z \sim p_{z}(z)}[\log D(G(z))] $$
 
 Where:
 - $L_G$ is the generator loss
