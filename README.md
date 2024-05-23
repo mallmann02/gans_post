@@ -258,8 +258,6 @@ Another trick used in the code is train the discriminator for the real and fake 
 - `FANTASTIC PAGE` [GAN Lab](https://poloclub.github.io/ganlab/)
 - `Video` [Generative vs. Discriminative AI](https://www.youtube.com/watch?v=hjsZSmL67Ck)
 - `Video` [Difference between generative and discriminative models.](https://www.youtube.com/watch?v=cmYQNhv5xUw)
-- `Article`
-- `Documentation`
 - `Article` [Background: What is a Generative Model?](https://developers.google.com/machine-learning/gan/generative)
 - `Article` [Understanding GAN Loss Functions](https://neptune.ai/blog/gan-loss-functions)
 - `Article` [GANs Failure Modes: How to Identify and Monitor Them](https://neptune.ai/blog/gan-failure-modes)
