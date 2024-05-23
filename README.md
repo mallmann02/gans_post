@@ -14,9 +14,9 @@ MathJax = {
 
 # GAN'S
 
-Before the problems, let's first introduce what are our study object this time. So, GAN's are an acronym for Generative Adversarial Networks, let's find out what each of these words mean:
+Before starting, let's first introduce what is our study object this time. So, GAN's are an acronym for Generative Adversarial Networks, let's take a brief look of each of these words mean.
 
-GAN's are a class of `G`enerative models that are trained through an `A`dversarial min-max game between two neural `N`etworks, the generator and the discriminator. We'll talk about the generator and the discriminator in a few moments.
+GAN's are a class of `G`enerative models that are trained through an `A`dversarial min-max game between two neural `N`etworks, the generator and the discriminator. We'll talk about each of the magical words here, but first things first, let's see where we are in the area of ML and statistics.
 
 ### Looking at the big picture, what are generative models? And how are they different from our old friend class of dicriminative models?
 
