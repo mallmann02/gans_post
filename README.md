@@ -185,11 +185,23 @@ for epoch in range(epochs):
 
 ```python
 def train_generator(optimizer, data_fake):
+  # Getting the batch size
   b_size = data_fake.size(0)
+
+  # Creating the a vector of ones to sinalize the real data
   real_label = label_real(b_size)
+
+  # Zeroing the gradients
   optimizer.zero_grad()
+
+  # Getting output from the discriminator for the generated data
   output = discriminator(data_fake)
+
+  # Calculating the loss
+  # Here we are seeing how well the generator is able to fool the discriminator by seeing how likely the discriminator is to classify the fake data as real
   loss = criterion(output, real_label)
+
+  # Backpropagating the loss
   loss.backward()
   optimizer.step()
   return loss
@@ -199,33 +211,47 @@ def train_generator(optimizer, data_fake):
 
 ```python
 def train_discriminator(optimizer, data_real, data_fake):
+  # Getting the batch size
   b_size = data_real.size(0)
+
+  # Creating the a vector of ones to sinalize the real data
   real_label = label_real(b_size)
+
+  # Creating the a vector of zeros to sinalize the fake data
   fake_label = label_fake(b_size)
+
+  # Zeroing the gradients
   optimizer.zero_grad()
+
+  # Getting output from the discriminator for the real data
   output_real = discriminator(data_real)
+
+  # Calculating the loss for the real data
+  # [Trick] Here we are seeing how well the discriminator is able to classify the real data as real
   loss_real = criterion(output_real, real_label)
+
+  # Getting output from the discriminator for the fake data
   output_fake = discriminator(data_fake)
+
+  # Calculating the loss for the fake data
+  # [Trick] Here we are seeing how well the discriminator is able to classify the fake data as fake
   loss_fake = criterion(output_fake, fake_label)
+
+  # Combining the losses
+  # [Trick] Here we are accumulating the losses for the real and fake data to get the total loss for the discriminator
   loss_real.backward()
   loss_fake.backward()
+
+  # Backpropagating the loss
   optimizer.step()
   return loss_real, loss_fake
 ```
 
-## Training problems
+In the code I've marked some tricks that are used to stabilize the training process. Usually, the training process of GAN's is very unstable and it's common to observe some loss values spiking a lot. 
 
-### Mode Collapse
+One of the tricks used in the code is the training of the discriminator for k consecutive steps before training the generator. This trick is used to stabilize the training process by giving the discriminator more time to learn the distribution of the real data before the generator starts to generate fake data. By doing this we are able to retrieve a better feedback from the discriminator. Imagine that the discriminator is setting a target for the generator to aim, so it's better if we keep this "target" stable.
 
-Mode collapse is a common problem in GAN's training process. It occurs when the generator collapses to a single output, generating the same output for all the input noise. This problem is caused by the generator finding a way to fool the discriminator by generating a single output that is able to fool the discriminator.
-
-### Vanishing Gradients
-
-Vanishing gradients is a common problem in GAN's training process. It occurs when the gradients of the generator or the discriminator vanish during the training process. This problem is caused by the generator or the discriminator being unable to learn the distribution of the data.
-
-### Unstable Training
-
-Unstable training is a common problem in GAN's training process. It occurs when the generator or the discriminator are unable to find a stable output during the training process. This problem is caused by the generator or the discriminator being unable to learn the distribution of the data.
+Another trick used in the code is train the discriminator for the real and fake data separately and then accumulate the losses. This trick is also used to stabilize the training process by providing a better sense of distance between the real and fake data for the discriminator. In the conventional loss function, we are just calculate the distance between the real and fake data.
 
 
 ## References
